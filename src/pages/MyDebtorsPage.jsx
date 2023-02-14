@@ -8,7 +8,7 @@ const MyDebtors = () => {
 
     useEffect(() => {
         const token = localStorage.getItem("token");
-        const fetchingDeptors = async () => {
+        const fetchingDebtors = async () => {
           const request = await fetch('http://localhost:3000/connection/getMyDebtors',
           {
             method: "GET",
@@ -21,8 +21,34 @@ const MyDebtors = () => {
           setDebtors(arrayDeConexiones)
         }
     
-        fetchingDeptors()
+        fetchingDebtors()
       }, [])
+
+    async function handleRemoveDebt(idConnection, idDebt){
+      const token = localStorage.getItem("token");
+      const response = await fetch(`http://localhost:3000/connection/removeDebt/${idConnection}/${idDebt}`,
+      {
+        method:'DELETE',
+        headers: {
+          'Content-Type':'application/json',
+          "Authorization": "bearer " + token,
+        },
+      })
+      const data = await response.json()
+      console.log(data)
+      //TODO refrescar la lista
+      const newDebtors = [...debtors]
+      console.log(newDebtors)
+
+      const debtorToRemoveDebt = newDebtors.find(e=>e._id === idConnection)
+     console.log(debtorToRemoveDebt)
+     debtorToRemoveDebt.debts = debtorToRemoveDebt.debts.filter(e=>e._id !== idDebt)
+      setDebtors(newDebtors)
+    }
+
+    function handleAddDebt(event, idConnection, debtData){
+
+    }
 
     return <>
         <h1>Listado de mis deudores</h1>
@@ -32,7 +58,10 @@ const MyDebtors = () => {
             <h2>
               Deudor: {debtor.debtor.name} ({debtor.debtor.email})
             </h2>
-            <Debts debts={debtor.debts} idConnection={debtor._id}/>
+            <Debts 
+              handleRemove={(idDebt)=>handleRemoveDebt(debtor._id,idDebt)} 
+              debts={debtor.debts}/>
+
             <DebtForm idConnection={debtor._id}/>
           </li>
         ))}

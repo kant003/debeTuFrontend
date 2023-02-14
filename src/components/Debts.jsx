@@ -1,19 +1,4 @@
-const Debts = ({debts, idConnection}) => {
-
-    async function handleRemove(idDebt){
-        const token = localStorage.getItem("token");
-        const response = await fetch(`http://localhost:3000/connection/removeDebt/${idConnection}/${idDebt}`,
-        {
-          method:'DELETE',
-          headers: {
-            'Content-Type':'application/json',
-            "Authorization": "bearer " + token,
-          },
-        })
-        const data = await response.json()
-        console.log(data)
-    }
-
+const Debts = ({debts, handleRemove}) => {
     const sum = debts.filter(d=>!d.isPaid).reduce((acc, d) => acc+d.amount , 0)
     
     if(!debts.length) return 'No hay deudas'
