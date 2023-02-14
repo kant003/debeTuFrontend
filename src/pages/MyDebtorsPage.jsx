@@ -32,7 +32,7 @@ const MyDebtors = () => {
             <h2>
               Deudor: {debtor.debtor.name} ({debtor.debtor.email})
             </h2>
-            <Debts debts={debtor.debts}/>
+            <Debts debts={debtor.debts} idConnection={debtor._id}/>
             <DebtForm idConnection={debtor._id}/>
           </li>
         ))}
