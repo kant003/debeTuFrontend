@@ -35,19 +35,42 @@ const MyDebtors = () => {
         },
       })
       const data = await response.json()
-      console.log(data)
       //TODO refrescar la lista
       const newDebtors = [...debtors]
-      console.log(newDebtors)
-
       const debtorToRemoveDebt = newDebtors.find(e=>e._id === idConnection)
-     console.log(debtorToRemoveDebt)
-     debtorToRemoveDebt.debts = debtorToRemoveDebt.debts.filter(e=>e._id !== idDebt)
+      debtorToRemoveDebt.debts = debtorToRemoveDebt.debts.filter(e=>e._id !== idDebt)
       setDebtors(newDebtors)
     }
 
-    function handleAddDebt(event, idConnection, debtData){
+    async function handleAddDebt(event, idConnection){
+      event.preventDefault()
+      let concept = event.target.concept.value
+      let amount = event.target.amount.value
 
+
+      const token = localStorage.getItem("token");
+        const response = await fetch('http://localhost:3000/connection/addDebt/'+idConnection,
+        {
+          method:'POST',
+          headers: {
+            'Content-Type':'application/json',
+            "Authorization": "bearer " + token,
+          },
+          body: JSON.stringify( { amount, concept } )  
+        })
+
+      if(!response.ok){
+          console.log('error en la peticion:')
+      }else{
+          console.log('deuda añadida')
+      }
+      const data = await response.json()
+      console.log(data.debts[data.debts.length-1])
+      // TODO Actualizar
+      const newDebtors = [...debtors]
+      const debtorToAddDebt = newDebtors.find(e=>e._id === idConnection)
+      debtorToAddDebt.debts.push({ _id:data.debts[data.debts.length-1]._id, amount, concept })
+      setDebtors(newDebtors)
     }
 
     return <>
@@ -62,7 +85,7 @@ const MyDebtors = () => {
               handleRemove={(idDebt)=>handleRemoveDebt(debtor._id,idDebt)} 
               debts={debtor.debts}/>
 
-            <DebtForm idConnection={debtor._id}/>
+            <DebtForm onSubmit={(e)=>handleAddDebt(e, debtor._id)} idConnection={debtor._id}/>
           </li>
         ))}
       </ul>

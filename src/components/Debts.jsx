@@ -1,8 +1,8 @@
 const Debts = ({debts, handleRemove}) => {
-    const sum = debts.filter(d=>!d.isPaid).reduce((acc, d) => acc+d.amount , 0)
     
     if(!debts.length) return 'No hay deudas'
-
+    
+    const sum = debts.filter(d=>!d.isPaid).reduce((acc, d) => +acc+(+d.amount) , 0)
     
     return <>
         {debts.length}
