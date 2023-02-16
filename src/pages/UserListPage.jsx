@@ -9,11 +9,11 @@ const UserList = () => {
         async function callApi(){
             setLoading(true)
             console.log('llamando')
-            console.log(import.meta.env.backend)
-            //const request = await fetch(import.meta.env.backend+'/user/')
-            //const json = await request.json()
-            //setUsers(json)
-            //setLoading(false)
+            console.log(import.meta.env.VITE_BACKEND)
+            const request = await fetch(import.meta.env.VITE_BACKEND+'/user/')
+            const json = await request.json()
+            setUsers(json)
+            setLoading(false)
         }
         callApi()
     },[])
