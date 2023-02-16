@@ -1,21 +1,9 @@
-import { useEffect } from "react"
-import { useState } from "react"
+import useUsers from "../hooks/useUsers"
 
 const UserList = () => {
-    const [users, setUsers] = useState([])
-    const [loading ,setLoading] = useState(false)
-
-    useEffect(()=>{
-        async function callApi(){
-            setLoading(true)
-            const request = await fetch('http://localhost:3000/user/')
-            const json = await request.json()
-            setUsers(json)
-            setLoading(false)
-        }
-        callApi()
-    },[])
-
+    const {users, loading, error} = useUsers()
+ 
+    if(error) return <div>Error {error}</div>
     if(loading) return <div>Loading...</div>
     if(!users.length) return <div>'No hay usuarios'</div>
 
