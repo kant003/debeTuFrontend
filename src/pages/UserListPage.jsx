@@ -8,7 +8,8 @@ const UserList = () => {
     useEffect(()=>{
         async function callApi(){
             setLoading(true)
-            const request = await fetch('http://localhost:3000/user/')
+            console.log(import.meta.env.backend)
+            const request = await fetch(import.meta.env.backend+'/user/')
             const json = await request.json()
             setUsers(json)
             setLoading(false)
